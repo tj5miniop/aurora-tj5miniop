@@ -1,12 +1,12 @@
 ---
 # yaml-language-server: $schema=https://schema.blue-build.org/recipe-v1.json
 # image will be published to ghcr.io/<user>/<name>
-name: aurora-tj5miniop
+name: aurora-tj5miniop-nvidia-open
 # description will be included in the image's metadata
-description: my personal OS image, Based on Project Aurora from Universal Blue. NON-NVIDIA Image
+description: my personal OS image, Based on Project Aurora from Universal Blue. NVIDIA Image (Uses the open drivers)
 
 # the base image to build on top of (FROM) and the version tag to use
-base-image: ghcr.io/tj5miniop/ublue-rolling-images-aurora
+base-image: ghcr.io/tj5miniop/ublue-rolling-images-aurora-nvidia
 image-version: latest # latest is also supported if you want new updates ASAP
 
 # module configuration, executed in order
@@ -17,17 +17,11 @@ modules:
       - source: system
         destination: / # copies files/system/* (* means everything inside it) into your image's root folder /
 
-# Script snippets (NVIDIA & RPM FUSION FIXES)
-#  - type: script
-#    snippets:
-#  
-
   #Add Some Bling  
   - type: bling
     install:
         - rpmfusion
         - dconf-update-service
-
 
   - type: rpm-ostree
     repos:
@@ -48,14 +42,12 @@ modules:
       - ananicy-cpp
       - gnome-disk-utility
       - mangohud
-      - gamescope
     remove:
       - zram-generator-defaults
       - kde-partitionmanager 
       - skanpage
       - kwrite
 
-    
 
   - type: default-flatpaks
     notify: true # Send notification after install/uninstall is finished (true/false)
@@ -77,12 +69,10 @@ modules:
         - org.kde.kclock
         - io.github.flattool.Warehouse
     user: {} # Also add Flathub user repo, but no user packages
-    
 
   - type: script
     scripts:
-      - setup.sh
-
+      - setup.sh 
 
   - type: signing # this sets up the proper policy & signing files for signed images to work fully
 
